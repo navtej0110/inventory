@@ -22,6 +22,10 @@ class Inventory extends CI_Controller {
         $thisQuery = $this->db->query("SELECT count(id) as active_products FROM `products` WHERE `status` = 'active'")->result(); 
         $data['active_products'] = $thisQuery[0]->active_products;
 
+        // 3.4. Count of active products which don't belong to any user.
+        $thisQuery = $this->db->query("SELECT count(id) as active_products_without_user  FROM `products` WHERE `status` = 'active' AND `id` NOT  IN (SELECT `product_id` FROM `user_product_list`)")->result(); 
+        $data['active_products_without_user'] = $thisQuery[0]->active_products_without_user;
+
 		$this->load->view('inventory/dashboard', $data);
 	}
 }
