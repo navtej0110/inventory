@@ -40,5 +40,20 @@
                 <?php endif; ?>
             </tbody>
         </table>
+        <hr/>
+        <h3>Conversion Rates:</h3>
+        <?php if ($conversion_rates): ?>
+            <table cellspacing="0" cellpadding="10" border="1" width="300">
+                <tbody>
+                    <tr>
+                        <td rowspan="2">1 EUR</td>
+                        <td><?php echo number_format($conversion_rates->USD,2) ?> USD</td>
+                    </tr>
+                    <tr>
+                        <td><?php echo number_format($conversion_rates->RON,2) ?> RON</td>
+                    </tr>
+                </tbody>
+            </table>
+        <?php endif; ?>
     </body>
 </html>
