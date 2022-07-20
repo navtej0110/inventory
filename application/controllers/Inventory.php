@@ -85,4 +85,73 @@ class Inventory extends CI_Controller {
         
         return $response_obj->success ? $response_obj->rates : false;
     }
+
+    public function sync_db() {
+        
+        $this->db->query("CREATE DATABASE `inventory`");
+        $this->db->query("USE `inventory`");
+
+        // Create Users Table
+        $this->db->query(
+            "CREATE TABLE `users` (
+                `user_id` int NOT NULL AUTO_INCREMENT,
+                `user_name` varchar(255) NOT NULL,
+                `status` tinyint(1) DEFAULT '1',
+                `verified` tinyint(1) DEFAULT '0',
+                PRIMARY KEY (`user_id`)
+            )"
+        );
+
+        // Create Products Table
+        $this->db->query(
+            "CREATE TABLE `products` (
+                `id` INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                `title` VARCHAR(255) NOT NULL,
+                `description` VARCHAR(255) NOT NULL,
+                `image` VARCHAR(255) NOT NULL,
+                `status` ENUM('active','inactive') DEFAULT 'active'
+            )"
+        );
+
+        // Create User/Products Mapping
+        $this->db->query(
+            "CREATE TABLE `user_product_list` (
+                `user_product_id` INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                `user_id` INT(11) NOT NULL,
+                `product_id` INT(11) NOT NULL,
+                `quantity` INT(11) NOT NULL,
+                `product_price` FLOAT(18,2) NOT NULL
+            )"
+        );
+
+        // Create Dummy Users
+        $this->db->query(
+            "INSERT INTO users (`user_name`, `status`, `verified`)
+            VALUES ('John', 1, 1),
+            ('Tim', 0, 1),
+            ('Steve', 0, 0),
+            ('Rory', 1, 0)"
+        );
+
+        // Create Dummy Products
+        $this->db->query(
+            "INSERT INTO products (`title`, `description`, `image`, `status`)
+            VALUES ('iPhone X', 'Product 1 Description', 'Product1Image.jpg', 'active'),
+            ('iPhone 11', 'Product 2 Description', 'Product2Image.jpg', 'inactive'),
+            ('iPhone 12', 'Product 3 Description', 'Product3Image.jpg', 'active'),
+            ('iPhone 13', 'Product 4 Description', 'Product4Image.jpg', 'inactive')"
+        );
+
+        // Create User/Products
+        $this->db->query(
+            "INSERT INTO user_product_list (`user_id`, `product_id`, `quantity`, `product_price`)
+            VALUES (1, 1, 10, 100),
+            (1, 3, 20, 200),
+            (2, 1, 10, 300),
+            (2, 2, 30, 100),
+            (3, 3, 20, 200)"
+        );
+
+        echo 'DB Synced'; die();
+    }
 }
