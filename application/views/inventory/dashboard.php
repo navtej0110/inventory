@@ -17,5 +17,8 @@
         <hr/>
         <h3>Active Attached Products:</h3>
         <?php echo $active_attached_products; ?>
+        <hr/>
+        <h3>Active Attached Products Price Sum:</h3>
+        <?php echo $active_attached_products_price; ?>
     </body>
 </html>
