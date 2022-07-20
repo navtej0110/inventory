@@ -26,6 +26,15 @@ class Inventory extends CI_Controller {
         $thisQuery = $this->db->query("SELECT count(id) as active_products_without_user  FROM `products` WHERE `status` = 'active' AND `id` NOT  IN (SELECT `product_id` FROM `user_product_list`)")->result(); 
         $data['active_products_without_user'] = $thisQuery[0]->active_products_without_user;
 
+        // 3.5. Amount of all active attached products (if user1 has 3 prod1 and 2 prod2 which are active, user2 has 7 prod2 and 4 prod3, prod3 is inactive, then the amount of active attached products will be 3 + 2 + 7 = 12).
+        $thisQuery = $this->db->query(
+            "SELECT sum(up.quantity) as active_attached_products
+            FROM `products` p
+            INNER JOIN `user_product_list` up ON (p.id = up.product_id)
+            WHERE p.`status` = 'active';"
+        )->result(); 
+        $data['active_attached_products'] = $thisQuery[0]->active_attached_products;
+
 		$this->load->view('inventory/dashboard', $data);
 	}
 }

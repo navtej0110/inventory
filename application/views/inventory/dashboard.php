@@ -14,5 +14,8 @@
         <hr/>
         <h3>Active Products Without User:</h3>
         <?php echo $active_products_without_user; ?>
+        <hr/>
+        <h3>Active Attached Products:</h3>
+        <?php echo $active_attached_products; ?>
     </body>
 </html>
