@@ -35,6 +35,15 @@ class Inventory extends CI_Controller {
         )->result(); 
         $data['active_attached_products'] = $thisQuery[0]->active_attached_products;
 
+        // 3.6. Summarized price of all active attached products (from the previous subpoint if prod1 price is 100$, prod2 price is 120$, prod3 price is 200$, the summarized price will be 3 x 100 + 9 x 120 = 1380).
+        $thisQuery = $this->db->query(
+            "SELECT sum(up.quantity * up.product_price) as active_attached_products_price
+            FROM `products` p
+            INNER JOIN `user_product_list` up ON (p.id = up.product_id)
+            WHERE p.`status` = 'active';"
+        )->result(); 
+        $data['active_attached_products_price'] = $thisQuery[0]->active_attached_products_price;
+
 		$this->load->view('inventory/dashboard', $data);
 	}
 }
