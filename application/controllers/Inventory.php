@@ -54,6 +54,35 @@ class Inventory extends CI_Controller {
             GROUP BY u.user_id;"
         )->result();
 
+        $data['conversion_rates'] = $this->get_exchange_rates('EUR','USD,RON');
+
 		$this->load->view('inventory/dashboard', $data);
 	}
+
+    public function get_exchange_rates($base,$symbols) {
+        $curl = curl_init();
+
+        // API key is placed here for Testing. It can be moved to more secure place like .env file
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.apilayer.com/exchangerates_data/latest?symbols=$symbols&base=$base",
+            CURLOPT_HTTPHEADER => array(
+                "Content-Type: text/plain",
+                "apikey: gMWALyRxVCDkzGmvorlBY0OFQXaSAbuw"
+            ),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET"
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        $response_obj = json_decode($response);
+        
+        return $response_obj->success ? $response_obj->rates : false;
+    }
 }
