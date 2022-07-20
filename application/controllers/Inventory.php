@@ -44,6 +44,16 @@ class Inventory extends CI_Controller {
         )->result(); 
         $data['active_attached_products_price'] = $thisQuery[0]->active_attached_products_price;
 
+        // 3.7. Summarized prices of all active products per user. For example - John Summer - 85$, Lennon Green - 107$.
+        $data['active_attached_products_price_per_user'] = $this->db->query(
+            "SELECT u.user_name, sum(up.quantity * up.product_price) as price
+            FROM `products` p
+            INNER JOIN `user_product_list` up ON (p.id = up.product_id)
+            INNER JOIN `users` u ON (u.user_id = up.user_id)
+            WHERE p.`status` = 'active'
+            GROUP BY u.user_id;"
+        )->result();
+
 		$this->load->view('inventory/dashboard', $data);
 	}
 }
